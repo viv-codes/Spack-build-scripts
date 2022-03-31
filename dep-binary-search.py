@@ -58,25 +58,21 @@ def parsepackage(filepath):
 
 
 def binarysearch(filepath, numdeps):
-    '''Performs the binary splits and comments out lines as required'''
-    if (binsearchstep == 0):
-        tocomment = numdeps//2
-        with open (filepath, "r") as package:
+    """Performs the binary splits and comments out lines as required"""
+    if binsearchstep == 0:
+        tocomment = numdeps // 2
+        with open(filepath, "r") as package:
             lines = package.readlines()
-            while (tocomment > 0):
+            while tocomment > 0:
                 for index, line in enumerate(lines):
                     if "depends_on" in line:
                         lines[index] = "#" + line
-                        tocomment-=1
+                        tocomment -= 1
                     else:
                         lines[index] = line
         with open(filepath, "w") as package:
             for line in lines:
                 package.write(line)
-
-
-
-                    
 
 
 def save(self):
