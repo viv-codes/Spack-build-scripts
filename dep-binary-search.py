@@ -57,22 +57,60 @@ def parsepackage(filepath):
     binarysearch(filepath, numdeps)
 
 
-def binarysearch(filepath, numdeps):
-    """Performs the binary splits and comments out lines as required"""
-    if binsearchstep == 0:
-        tocomment = numdeps // 2
-        with open(filepath, "r") as package:
-            lines = package.readlines()
-            while tocomment > 0:
-                for index, line in enumerate(lines):
-                    if "depends_on" in line:
-                        lines[index] = "#" + line
-                        tocomment -= 1
-                    else:
-                        lines[index] = line
-        with open(filepath, "w") as package:
-            for line in lines:
-                package.write(line)
+# def binarysearch(filepath, numdeps):
+#     """Performs the binary splits and comments out lines as required"""
+#     if binsearchstep == 0:
+#         tocomment = numdeps // 2
+#         with open(filepath, "r") as package:
+#             lines = package.readlines()
+#             while tocomment > 0:
+#                 for index, line in enumerate(lines):
+#                     if "depends_on" in line:
+#                         lines[index] = "#" + line
+#                         tocomment -= 1
+#                     else:
+#                         lines[index] = line
+#         with open(filepath, "w") as package:
+#             for line in lines:
+#                 package.write(line)
+#         exitsequence()
+
+def depbinsearch(deps[], start, end):
+    if start > end:
+        return -1
+    
+    mid = (start+end)//2
+
+    #! NEED TO COME UP WITH AN END CASE
+
+    #TODO Comment out start-mid
+
+    #TODO Save state
+
+    #TODO Load state
+
+    if userchoose == 'good':
+        depbinsearch(deps[], start, mid-1)
+    elif userchoose == 'bad':
+        #TODO comment out mid-end
+        
+        # TODO save state
+
+        #TODO Load state
+
+        if userchoose == 'good':
+            depbinsearch(deps[], start, mid-1)
+        else:
+            print("Multiple bad dependencies! Exiting search at last good state!")
+
+
+
+    
+
+def exitsequence():
+    save()
+    print("Step"+(binsearchstep+1)+"completed! "+numdeps//2 +" dependencies commented out!")
+    exit()
 
 
 def save(self):
