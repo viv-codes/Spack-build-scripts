@@ -1,27 +1,31 @@
+import json
 import os
 import sys
 
+CONFIGFILE = ".DepBinSearchCfg"
+filepath = None
+
 def query():
     '''User query for first run only'''
-    print("Enter the path for the package.py:")
-    path=input()
-    if (verifypath(path) == True):
-        initialprep(path)
+    print("Enter the filepath for the package.py:")
+    filepath=input()
+    if (verifyfilepath(filepath) == True):
+        initialprep(filepath)
     
-def verifypath(path):
-    if path == "":
-        print("Must provide an input path! Exiting!")
+def verifyfilepath(filepath):
+    if filepath == "":
+        print("Must provide an input filepath! Exiting!")
         exit()
-    elif os.path.isdir(path):
-        print("Must provide the path for the package.py! Exiting!")
+    elif os.path.isdir(filepath):
+        print("Must provide the filepath for the package.py! Exiting!")
         exit()
-    elif os.path.isfile(path):
+    elif os.path.isfile(filepath):
         return True
 
 def continuitycheck():
     return os.path.exists(".depbininternal")
         
-def initialprep(path):
+def initialprep(filepath):
     if (continuitycheck() == True):
         print("Tempfile from previous binary search found! Do you wish to overwrite this and start a new search: [y/n]:")
         choice=input()
@@ -32,17 +36,35 @@ def initialprep(path):
             exit()
 
     log=open(".depbsint", "w")
-    with open(path) as package:
+    with open(filepath) as package:
         lines = package.readlines()
 
+def save(self):
+    binsearchstep = None # TODO Hook here
+    savefilepath = filepath
+    data = {
+        'binsearchstep':binsearchstep,
+        'savefilepath':filepath,
+    }
+    with open(CONFIGFILE, 'w') as f:
+        json.dump(data, f)
+
+def load(self):
+    if os.path.exists(CONFIGFILE):
+        with open(CONFIGFILE, 'r') as f:
+            data = json.load(f)
+        binsearchstep = data['binsearchstep']
+        filepath = data['savefilepath']
+
+
 def main():
-    if (sys.argv[0] == "" or (sys.argv[0] == "start" and sys.argv[1] == None)): #! I need to confirm that this works as intended
+    if (sys.argv[0] == "" or (sys.argv[0] == "start" and sys.argv[1] == None)):
         print("Starting new binary search!")
         query()
     elif (sys.argv[0] == "start" and sys.argv[1] != None):
-        path=sys.argv[1]
-        verifypath(path)
-        initialprep(path)
+        filepath=sys.argv[1]
+        verifyfilepath(filepath)
+        initialprep(filepath)
     
 
 
